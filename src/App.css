@@ -1,0 +1,7 @@
+.cart-item-actions {
+  display: flex;
+}
+
+.action-icons {
+  margin-right: 10px;
+}
