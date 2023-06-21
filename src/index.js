@@ -13,13 +13,17 @@ import {
   Theme,
   useColorModeValue,
 } from '@chakra-ui/react'
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+
   <ChakraProvider >
+    <BrowserRouter>
   <React.StrictMode>
     <App />
   </React.StrictMode>
+    </BrowserRouter>
   </ChakraProvider>
 );
 

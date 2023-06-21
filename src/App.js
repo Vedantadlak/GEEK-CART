@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import { ChakraProvider } from '@chakra-ui/react';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { ChakraProvider, Box, Spinner } from '@chakra-ui/react';
 import Home from './Home';
 import Signup from './signup';
 import Login from './signin';
@@ -10,6 +10,8 @@ import firebase from './firebase';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -27,20 +29,56 @@ function App() {
     return user ? <Component {...rest} /> : <Navigate to="/login" replace />;
   };
 
+  useEffect(() => {
+    const handleStartLoading = () => {
+      setIsLoading(true);
+    };
+
+    const handleFinishLoading = () => {
+      setIsLoading(false);
+    };
+
+    const handleRouteChange = () => {
+      handleStartLoading();
+      setTimeout(handleFinishLoading, 250); // Simulating a delay of 1 second
+    };
+
+    const unlisten = () => handleRouteChange();
+
+    return () => {
+      unlisten();
+    };
+  }, [location.pathname]);
+
   return (
     <ChakraProvider>
       <FirebaseProvider value={firebase}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/cart"
-              element={<PrivateRoute component={CartHome} />}
-            />
-          </Routes>
-        </BrowserRouter>
+        
+          <Box minHeight="100vh" position="relative">
+            {isLoading && (
+              <Box
+                position="fixed"
+                top="0"
+                left="0"
+                width="100vw"
+                height="100vh"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                bg="rgba(0, 0, 0, 0.5)"
+                zIndex="9999"
+              >
+                <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="purple.700" size="xl" />
+              </Box>
+            )}
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/cart" element={<PrivateRoute component={CartHome} />} />
+            </Routes>
+          </Box>
+        
       </FirebaseProvider>
     </ChakraProvider>
   );
