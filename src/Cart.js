@@ -12,7 +12,7 @@ function Cart(props) {
                     product={product}
                     onIncreaseQuantity={onIncreaseQuantity}
                     onDecreaseQuantity={onDecreaseQuantity}
-                    onhandleDeleteProduct={onHandleDeleteProduct}
+                    onHandleDeleteProduct={onHandleDeleteProduct}
                 />
             ))}
         </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link as RouterLink,useHistory } from 'react-router-dom';
 import {
     Flex,
     Box,
@@ -8,7 +8,9 @@ import {
     Input,
     Checkbox,
     Stack,
+    Link as ChakraLink,
     Link,
+    Text,
     Button,
     Heading,
     IconButton,
@@ -95,6 +97,12 @@ export default function Login() {
                             >
                                 Sign in
                             </Button>
+                            <Text align="center">
+                                Not a User?{' '}
+                                <ChakraLink as={RouterLink} to="/signup" color="blue.400">
+                                    SignUp
+                                </ChakraLink>
+                            </Text>
                         </Stack>
                     </Stack>
                 </Box>

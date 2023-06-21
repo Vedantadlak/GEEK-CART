@@ -12,13 +12,12 @@ import {
     Heading,
     Text,
     useColorModeValue,
-    Link,
+    Link as ChakraLink,
     VStack,
-    IconButton
+    IconButton,
 } from '@chakra-ui/react';
-
-import { ViewIcon, ViewOffIcon,ArrowBackIcon } from '@chakra-ui/icons';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { ViewIcon, ViewOffIcon, ArrowBackIcon } from '@chakra-ui/icons';
+import { useNavigate, Link } from 'react-router-dom'; // Import the Link component from react-router-dom
 import { useFirebase } from './FirebaseContext';
 
 export default function Signup() {
@@ -29,14 +28,12 @@ export default function Signup() {
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate(); // Use useNavigate hook instead of navigate function
+    const navigate = useNavigate();
     const firebase = useFirebase();
 
     const handleSignup = async () => {
         try {
-            const response = await firebase
-                .auth()
-                .createUserWithEmailAndPassword(formData.email, formData.password);
+            const response = await firebase.auth().createUserWithEmailAndPassword(formData.email, formData.password);
 
             // Update user profile with first and last name
             await response.user.updateProfile({
@@ -45,16 +42,12 @@ export default function Signup() {
 
             console.log(response);
             alert('Signup successful!');
-            navigate('/cart'); // Use navigate function to redirect to '/cart'
+            navigate('/cart');
         } catch (error) {
             console.error(error);
             alert('Signup error');
         }
     };
-
-    // Rest of the component code...
-
-
 
     return (
         <Flex
@@ -72,7 +65,6 @@ export default function Signup() {
                     onClick={() => navigate('/')}
                 />
             </Box>
-
             <VStack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <VStack align={'center'}>
                     <Heading
@@ -82,28 +74,18 @@ export default function Signup() {
                     >
                         Sign up
                     </Heading>
-                    <Text
-                        fontSize={'lg'}
-                        color={useColorModeValue('gray.600', 'gray.400')}
-                    >
+                    <Text fontSize={'lg'} color={useColorModeValue('gray.600', 'gray.400')}>
                         to enjoy all of our cool features ✌
                     </Text>
                 </VStack>
-                <Box
-                    rounded={'lg'}
-                    bg={useColorModeValue('white', 'gray.700')}
-                    boxShadow={'lg'}
-                    p={8}
-                >
+                <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
                     <Stack spacing={4}>
                         <FormControl id="firstName" isRequired>
                             <FormLabel>First Name</FormLabel>
                             <Input
                                 type="text"
                                 value={formData.firstName}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, firstName: e.target.value })
-                                }
+                                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                             />
                         </FormControl>
                         <FormControl id="lastName">
@@ -111,9 +93,7 @@ export default function Signup() {
                             <Input
                                 type="text"
                                 value={formData.lastName}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, lastName: e.target.value })
-                                }
+                                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                             />
                         </FormControl>
                         <FormControl id="email" isRequired>
@@ -121,9 +101,7 @@ export default function Signup() {
                             <Input
                                 type="email"
                                 value={formData.email}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, email: e.target.value })
-                                }
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             />
                         </FormControl>
                         <FormControl id="password" isRequired>
@@ -132,16 +110,12 @@ export default function Signup() {
                                 <Input
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.password}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, password: e.target.value })
-                                    }
+                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 />
                                 <InputRightElement h={'full'}>
                                     <Button
                                         variant={'ghost'}
-                                        onClick={() =>
-                                            setShowPassword((showPassword) => !showPassword)
-                                        }
+                                        onClick={() => setShowPassword((showPassword) => !showPassword)}
                                     >
                                         {showPassword ? <ViewIcon /> : <ViewOffIcon />}
                                     </Button>
@@ -164,9 +138,8 @@ export default function Signup() {
                         </Stack>
                         <Stack pt={6}>
                             <Text align={'center'}>
-                                Already a user? <Link color={'blue.400'} to="/login">Login</Link>
+                                Already a user? <ChakraLink as={Link} color={'blue.400'} to="/login">Login</ChakraLink>
                             </Text>
-
                         </Stack>
                     </Stack>
                 </Box>
