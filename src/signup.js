@@ -13,10 +13,11 @@ import {
     Text,
     useColorModeValue,
     Link,
-    VStack
+    VStack,
+    IconButton
 } from '@chakra-ui/react';
 
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { ViewIcon, ViewOffIcon,ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useFirebase } from './FirebaseContext';
 
@@ -62,6 +63,16 @@ export default function Signup() {
             justify={'center'}
             bg={useColorModeValue('purple.100', 'purple.800')}
         >
+            <Box position="absolute" top={4} left={4}>
+                <IconButton
+                    icon={<ArrowBackIcon />}
+                    variant="ghost"
+                    colorScheme="purple"
+                    size="lg"
+                    onClick={() => navigate('/')}
+                />
+            </Box>
+
             <VStack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <VStack align={'center'}>
                     <Heading

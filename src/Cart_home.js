@@ -7,16 +7,22 @@ import Navbar from './Navbar';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import { collection, getDocs, doc, onSnapshot } from 'firebase/firestore';
+
 import { db } from './firebase';
+
+import { collection, getDocs, doc, onSnapshot, updateDoc, serverTimestamp } from 'firebase/firestore';
+
 
 function CartHome() {
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        const unsubscribe = db.collection('products').onSnapshot((snapshot) => {
-            const productsData = snapshot.docs.map((doc) => doc.data());
+        const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
+            const productsData = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
             setProducts(productsData);
             setLoading(false);
         });
@@ -28,19 +34,47 @@ function CartHome() {
 
 
 
-    function handleIncreaseQuantity(product) {
-        const updatedProducts = products.map((p) =>
-            p.id === product.id ? { ...p, qty: p.qty + 1 } : p
-        );
-        setProducts(updatedProducts);
+
+    async function handleIncreaseQuantity(product) {
+        const docRef = doc(db, 'products', product.id);
+        const updatedQty = product.qty + 1;
+
+        try {
+            await updateDoc(docRef, { qty: updatedQty, updatedAt: serverTimestamp() });
+            const updatedProducts = products.map((p) =>
+                p.id === product.id ? { ...p, qty: updatedQty } : p
+            );
+            setProducts(updatedProducts);
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+        }
     }
 
-    function handleDecreaseQuantity(product) {
-        const updatedProducts = products.map((p) =>
-            p.id === product.id && p.qty > 0 ? { ...p, qty: p.qty - 1 } : p
-        );
-        setProducts(updatedProducts);
+
+    async function handleDecreaseQuantity(product) {
+        if (product.qty === 0) {
+            return;
+        }
+
+        const docRef = doc(db, 'products', product.id);
+        const updatedQty = product.qty - 1;
+
+        try {
+            await updateDoc(docRef, { qty: updatedQty, updatedAt: serverTimestamp() });
+            const updatedProducts = products.map((p) =>
+                p.id === product.id ? { ...p, qty: updatedQty } : p
+            );
+            setProducts(updatedProducts);
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+        }
     }
+
+
+
+
+
+
 
     function handleDeleteProduct(id) {
         const updatedProducts = products.filter((product) => product.id !== id);

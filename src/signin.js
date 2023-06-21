@@ -11,9 +11,10 @@ import {
     Link,
     Button,
     Heading,
-    Text,
+    IconButton,
     useColorModeValue,
 } from '@chakra-ui/react';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 import firebase from './firebase'; // Import the firebase instance
 import { useNavigate } from 'react-router-dom';
 
@@ -36,17 +37,25 @@ export default function Login() {
         } catch (error) {
             console.error(error);
             alert('Login error');
-            
         }
     };
 
     return (
         <Flex
             minH={'100vh'}
-            align={'center'}
+            align={'start'}
             justify={'center'}
             bg={useColorModeValue('purple.100', 'purple.800')}
         >
+            <Box position="absolute" top={4} left={4}>
+                <IconButton
+                    icon={<ArrowBackIcon />}
+                    variant="ghost"
+                    colorScheme="purple"
+                    size="lg"
+                    onClick={() => navigate('/')}
+                />
+            </Box>
             <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <Stack align={'center'}>
                     <Heading fontSize={'4xl'} color={useColorModeValue('purple.800', 'white')}>
