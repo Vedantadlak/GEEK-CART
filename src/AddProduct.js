@@ -6,7 +6,6 @@ import AddProductPopup from './AddProductPopup';
 import { FirebaseContext } from './FirebaseContext';
 
 
-
 function AddProduct() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const firebase = useContext(FirebaseContext);

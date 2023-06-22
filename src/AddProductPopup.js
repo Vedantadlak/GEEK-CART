@@ -1,70 +1,61 @@
-import React, { useState } from 'react';
-import { Box, Heading, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Box, Heading, Button, Badge, Flex, IconButton, Icon } from '@chakra-ui/react';
+import { AiOutlineHome } from 'react-icons/ai';
+import { FaUser } from 'react-icons/fa';
+import AddProductPopup from './AddProductPopup';
+import { FirebaseContext } from './FirebaseContext';
 
-function AddProductPopup({ isOpen, onClose }) {
-    const [title, setTitle] = useState('');
-    const [price, setPrice] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [imageLink, setImageLink] = useState('');
+function AddProduct() {
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const firebase = useContext(FirebaseContext);
+    const currentUser = firebase.auth().currentUser;
+    const [displayName, setDisplayName] = useState('');
 
-    const handleTitleChange = (event) => {
-        setTitle(event.target.value);
+    useEffect(() => {
+        if (currentUser) {
+            const { displayName } = currentUser;
+            setDisplayName(displayName);
+        }
+    }, [currentUser]);
+
+    const handleOpenPopup = () => {
+        setIsPopupOpen(true);
     };
 
-    const handlePriceChange = (event) => {
-        setPrice(event.target.value);
-    };
-
-    const handleQuantityChange = (event) => {
-        setQuantity(event.target.value);
-    };
-
-    const handleImageLinkChange = (event) => {
-        setImageLink(event.target.value);
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Perform the necessary actions to add the product
-        // You can use the title, price, quantity, and imageLink states to submit the form
-        // Reset the form fields
-        setTitle('');
-        setPrice('');
-        setQuantity('');
-        setImageLink('');
-        onClose();
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="md">
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>Add Product</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                    <form onSubmit={handleSubmit}>
-                        <FormControl mb="4">
-                            <FormLabel>Title</FormLabel>
-                            <Input type="text" value={title} onChange={handleTitleChange} />
-                        </FormControl>
-                        <FormControl mb="4">
-                            <FormLabel>Price</FormLabel>
-                            <Input type="number" value={price} onChange={handlePriceChange} />
-                        </FormControl>
-                        <FormControl mb="4">
-                            <FormLabel>Quantity</FormLabel>
-                            <Input type="number" value={quantity} onChange={handleQuantityChange} />
-                        </FormControl>
-                        <FormControl mb="4">
-                            <FormLabel>Image Link</FormLabel>
-                            <Input type="text" value={imageLink} onChange={handleImageLinkChange} />
-                        </FormControl>
-                        <Button type="submit" colorScheme="purple">Add Product</Button>
-                    </form>
-                </ModalBody>
-            </ModalContent>
-        </Modal>
+        <Box p="8" bg="rgba(255, 255, 255, 0.8)" boxShadow="md" rounded="md" textAlign="center">
+            <Flex justify="space-between" align="center" mb="4">
+                <IconButton
+                    as={Link}
+                    to="/"
+                    variant="ghost"
+                    colorScheme="purple"
+                    icon={<AiOutlineHome size={24} />}
+                    aria-label="Home"
+                />
+                <Flex align="center">
+                    <Badge colorScheme="purple">{displayName}</Badge>
+                    <Icon as={FaUser} boxSize={6} ml={2} color="purple.500" />
+                </Flex>
+            </Flex>
+
+            <Heading size="lg" mb="4">
+                Seller Dashboard
+            </Heading>
+
+            <Button colorScheme="purple" onClick={handleOpenPopup}>
+                Add Product
+            </Button>
+
+            {/* Add the AddProductPopup component */}
+            <AddProductPopup isOpen={isPopupOpen} onClose={handleClosePopup} />
+        </Box>
     );
 }
 
-export default AddProductPopup;
+export default AddProduct;
