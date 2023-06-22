@@ -1,14 +1,24 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Heading, Button, Badge, Flex, IconButton } from '@chakra-ui/react';
 import { AiOutlineHome } from 'react-icons/ai';
 import AddProductPopup from './AddProductPopup';
 import { FirebaseContext } from './FirebaseContext';
 
+
+
 function AddProduct() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const firebase = useContext(FirebaseContext);
-    const currentUser = firebase.auth.currentUser;
+    const currentUser = firebase.auth().currentUser;
+    const [displayName, setDisplayName] = useState('');
+
+    useEffect(() => {
+        if (currentUser) {
+            const { displayName } = currentUser;
+            setDisplayName(displayName);
+        }
+    }, [currentUser]);
 
     const handleOpenPopup = () => {
         setIsPopupOpen(true);
@@ -17,10 +27,6 @@ function AddProduct() {
     const handleClosePopup = () => {
         setIsPopupOpen(false);
     };
-
-    // Retrieve the first name and last name from the logged-in user's data
-    const firstName = currentUser?.displayName?.split(' ')[0] || 'Unknown';
-    const lastName = currentUser?.displayName?.split(' ')[1] || 'Seller';
 
     return (
         <Box p="8" bg="rgba(255, 255, 255, 0.8)" boxShadow="md" rounded="md" textAlign="center">
@@ -33,7 +39,7 @@ function AddProduct() {
                     icon={<AiOutlineHome size={24} />}
                     aria-label="Home"
                 />
-                <Badge colorScheme="purple">{`${firstName} ${lastName}`}</Badge>
+                <Badge colorScheme="purple">{displayName}</Badge>
             </Flex>
 
             <Heading size="lg" mb="4">
