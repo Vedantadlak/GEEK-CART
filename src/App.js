@@ -7,6 +7,9 @@ import Login from './signin';
 import CartHome from './Cart_home';
 import { FirebaseProvider } from './FirebaseContext';
 import firebase from './firebase';
+import SellerLogin from './seller_login';
+import SellerSignup from './seller_signup';
+import AddProduct from './AddProduct';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -76,6 +79,10 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="/cart" element={<PrivateRoute component={CartHome} />} />
+              <Route path="/seller-login" element={<SellerLogin />} />
+            <Route path="/seller-signup" element={<SellerSignup />} />
+            <Route path="/add-product" element={<PrivateRoute component={AddProduct} />} />
+
             </Routes>
           </Box>
         

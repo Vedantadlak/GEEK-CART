@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink,useHistory } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import {
     Flex,
     Box,
@@ -19,37 +19,37 @@ import {
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import firebase from './firebase'; // Import the firebase instance
 import { useNavigate } from 'react-router-dom';
-import { useFirebase } from './FirebaseContext';
 
 
-export default function Login() {
+export default function SellerLogin() {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
     const navigate = useNavigate();
-    const firebase = useFirebase();
-
 
     const handleLogin = async () => {
         try {
-            const userExists = await firebase.auth().fetchSignInMethodsForEmail(formData.email);
+            const response = await firebase.auth().signInWithEmailAndPassword(
+                formData.email,
+                formData.password
+            );
 
-            if (userExists.length === 0) {
-                alert('User does not exist. Please sign up first.');
-                return;
+            // Check if the logged-in user is a seller
+            const userClaims = await firebase.auth().currentUser.getIdTokenResult();
+            const isSeller = userClaims.claims.seller;
+
+            if (isSeller) {
+                alert('Login successful!');
+                navigate('/add-product'); // Navigate to the add product page
+            } else {
+                throw new Error('Invalid seller login'); // Display an error message
             }
-
-            const response = await firebase.auth().signInWithEmailAndPassword(formData.email, formData.password);
-            console.log(response);
-            alert('Login successful!');
-            navigate('/cart');
         } catch (error) {
             console.error(error);
-            alert('Login error');
+            alert('Login error: ' + error.message); // Log the specific error message
         }
     };
-
 
     return (
         <Flex
@@ -70,7 +70,7 @@ export default function Login() {
             <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <Stack align={'center'}>
                     <Heading fontSize={'4xl'} color={useColorModeValue('purple.800', 'white')}>
-                        Sign in to your account
+                        Seller Login 
                     </Heading>
                 </Stack>
                 <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
@@ -107,8 +107,8 @@ export default function Login() {
                                 Sign in
                             </Button>
                             <Text align="center">
-                                Not a User?{' '}
-                                <ChakraLink as={RouterLink} to="/signup" color="blue.400">
+                                Want to Become a Seller?{' '}
+                                <ChakraLink as={RouterLink} to="/seller-signup" color="blue.400">
                                     SignUp
                                 </ChakraLink>
                             </Text>

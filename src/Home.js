@@ -39,6 +39,11 @@ function Home() {
                     <Link to="/login">
                         <Button colorScheme="purple">Log in</Button>
                     </Link>
+                    <Link to="/seller-login"> {/* Add a link to the Seller Login page */}
+                        <Button colorScheme="purple" variant="outline" ml="2">
+                            Seller
+                        </Button>
+                    </Link>
                 </ButtonGroup>
             </Box>
         </div>
