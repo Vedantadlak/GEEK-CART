@@ -14,7 +14,7 @@ function CartItem(props) {
     return (
         <Flex alignItems="center" justifyContent="space-between" mb={4}>
             <Box width={110} height={110} borderRadius="md" overflow="hidden" mr={4}>
-                <Image src={product.img} alt={product.title} objectFit="cover" />
+                <Image src={product.imageLink} alt={product.title} objectFit="cover" />
             </Box>
             <Box flex="1">
                 <Text fontSize="lg" fontWeight="bold">{product.title}</Text>
