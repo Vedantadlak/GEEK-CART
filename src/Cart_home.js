@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Box, Heading, Flex, Spinner, Text, Icon, IconButton, Button, Badge } from '@chakra-ui/react';
+import { Box, Heading, Flex, Spinner, Text, Icon, IconButton, Button, Badge, useBreakpointValue } from '@chakra-ui/react';
 import { MdHome } from 'react-icons/md';
 import { FaRupeeSign, FaShoppingBag, FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -17,7 +17,6 @@ function CartHome() {
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.auth().currentUser;
     
-
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
             const productsData = snapshot.docs.map((doc) => ({
@@ -99,6 +98,8 @@ function CartHome() {
         return total;
     }
 
+    const isMobile = useBreakpointValue({ base: true, md: false });
+
     return (
         <Box bg="purple.100" minHeight="100vh" py={8}>
             <Navbar count={getCartCount()} />
@@ -112,7 +113,7 @@ function CartHome() {
             </Flex>
             
             <Box maxWidth="800px" mx="auto" px={4}>
-                <Flex align="center" mb={4}>
+                <Flex direction={isMobile ? 'column' : 'row'} align="center" mb={4}>
                     <Link to="/">
                         <IconButton
                             aria-label="Home"
@@ -120,6 +121,7 @@ function CartHome() {
                             variant="ghost"
                             colorScheme="purple"
                             mr={2}
+                            mb={isMobile ? 2 : 0}
                         />
                     </Link>
                     <Heading as="h1" flex="1" textAlign="center">
@@ -150,12 +152,14 @@ function CartHome() {
                             bg="purple.200"
                             rounded="md"
                             mt={4}
+                            flexDir={isMobile ? 'column' : 'row'}
                         >
-                            <Flex align="flex-start">
+                            <Flex align="flex-start" mb={isMobile ? 2 : 0}>
                                 <Button
                                     colorScheme="purple"
-                                    size="lg"
+                                    size={isMobile ? 'md' : 'lg'}
                                     leftIcon={<Icon as={FaShoppingBag} boxSize={6} />}
+                                    mb={isMobile ? 2 : 0}
                                 >
                                     Buy Now
                                 </Button>
